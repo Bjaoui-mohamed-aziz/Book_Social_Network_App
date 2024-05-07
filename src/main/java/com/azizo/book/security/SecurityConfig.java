@@ -2,8 +2,6 @@ package com.azizo.book.security;
 
 
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -23,7 +21,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig  {
 
-    private JwtFilter jwtAuthFilter;
+    private final JwtFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
