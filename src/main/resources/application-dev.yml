@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/book_social_network
-    username:
-    password:
+    url: jdbc:postgresql://localhost:5432/sbn
+    username: postgres
+    password: patron222
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

@@ -22,7 +22,7 @@ public class RegistrationRequest {
      private String firstname;
      @NotEmpty(message = "Lastname is mandatory")
      @NotBlank(message = "Lastname is mandatory")
-     private String lastnamme;
+     private String lastname;
      @Email(message = "Email is not formatted")
      @NotEmpty(message = "Email is mandatory")
      @NotBlank(message = "Email is mandatory")

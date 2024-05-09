@@ -6,8 +6,8 @@ import com.azizo.book.email.EmailTemplateName;
 import com.azizo.book.role.RoleRepository;
 import com.azizo.book.user.Token;
 import com.azizo.book.user.TokenRepository;
-import com.azizo.book.user.User;
 import com.azizo.book.user.UserRepository;
+import com.azizo.book.user.Users;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,9 +38,9 @@ public class AuthenticationService {
                  // todo - better exception handling
                  .orElseThrow(() -> new IllegalStateException("ROLE USER was not intialized"));
         // create the user object
-         var user = User.builder()
+         var user = Users.builder()
                  .firstname(request.getFirstname())
-                         .lastnamme(request.getLastnamme())
+                         .lastname(request.getLastname())
                  .email(request.getEmail())
                  //encode the password
                  .password(passwordEncoder.encode(request.getPassword()))
@@ -59,7 +59,7 @@ public class AuthenticationService {
 
     }
 
-    private void sentValidationEmail(User user) throws MessagingException {
+    private void sentValidationEmail(Users user) throws MessagingException {
        //generate a token
         var newToken = generateAndSaveActivationToken(user);
 
@@ -76,7 +76,7 @@ public class AuthenticationService {
 
     }
 
-    private String generateAndSaveActivationToken(User user) {
+    private String generateAndSaveActivationToken(Users user) {
         // generate a token
         String generatedToken = generateActivationCode(6);
         //create a token object

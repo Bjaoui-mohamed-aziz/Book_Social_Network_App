@@ -1,6 +1,7 @@
 package com.azizo.book.role;
 
-import com.azizo.book.user.User;
+import com.azizo.book.user.Users;
+import com.azizo.book.user.Users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="user")
+@Table
 @EntityListeners(AuditingEntityListener.class)
  public class Role {
 
@@ -30,7 +31,7 @@ import java.util.List;
 
     @ManyToMany(mappedBy = "roles")
     @JsonIgnore
-    private List<User> users;
+    private List<Users> users;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
