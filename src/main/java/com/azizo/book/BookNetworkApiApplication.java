@@ -28,6 +28,9 @@ public class BookNetworkApiApplication {
 						Role.builder()
 								.name("USER").build());
 
-		}};
+
+			}
+			System.out.println("loumour mrigla");
+		};
 	}
 }

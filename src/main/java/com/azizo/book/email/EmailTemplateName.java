@@ -1,5 +1,6 @@
 package com.azizo.book.email;
 
+
 public enum EmailTemplateName {
 
     ACTIVATE_ACCOUNT("activate_account");
