@@ -1,43 +1,48 @@
 package com.azizo.book.book;
 
+import com.azizo.book.common.BaseEntity;
+import com.azizo.book.feedback.Feedback;
+import com.azizo.book.history.BookTransactionHistory;
+import com.azizo.book.user.Users;
 import jakarta.persistence.*;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-public class Book {
+@Getter
+@Setter
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Book extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    private Integer id;
     private String title;
+
     private String AuthorName;
+
     private String isbn;
+
     private String synopsis;
+
     private String bookCover;
+
     private boolean archived;
+
     private boolean shareable;
 
-    @CreatedDate
-    @Column(nullable = false,updatable = false)
-    private LocalDateTime createdDate;
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private Users owner;
 
-    @LastModifiedDate
-    @Column(insertable = false)
-    private LocalDateTime lastModifiedDate;
+    @OneToMany(mappedBy = "book")
+    private List<Feedback> feedbacks;
 
-    @CreatedBy
-    @Column(nullable = false, updatable = false)
-    private Integer createdBy;
+    @OneToMany(mappedBy = "book")
+    private List<BookTransactionHistory> histories;
 
-    @LastModifiedBy
-    @Column(insertable = false)
-    private Integer LastModifiedBy;
 }

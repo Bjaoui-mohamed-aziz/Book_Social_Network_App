@@ -1,5 +1,7 @@
 package com.azizo.book.user;
 
+import com.azizo.book.book.Book;
+import com.azizo.book.history.BookTransactionHistory;
 import com.azizo.book.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,6 +44,12 @@ public class Users implements UserDetails, Principal {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
+
+    @OneToMany(mappedBy = "users")
+    private List<BookTransactionHistory> histories;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
