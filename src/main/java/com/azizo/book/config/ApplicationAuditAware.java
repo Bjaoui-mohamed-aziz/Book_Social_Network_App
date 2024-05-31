@@ -8,6 +8,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
+
+//The ApplicationAuditAware class aims to provide current user information
+// for auditing mechanisms in a Spring application.
 public class ApplicationAuditAware implements AuditorAware<Integer> {
 
     @Override
