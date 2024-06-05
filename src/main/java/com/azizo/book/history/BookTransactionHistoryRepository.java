@@ -25,4 +25,14 @@ Page<BookTransactionHistory> findAllBorrowedBooks(Pageable pageable, Integer use
     where history.book.owner.id = :userId
 """)
     Page<BookTransactionHistory> findAllReturnedBooks(Pageable pageable, Integer userId);
+
+
+    @Query("""
+         SELECT (COUNT(*) > 0) AS isBorrowed
+         FROM BookTransactionHistory bookTransactionHistory
+         WHERE bookTransactionHistory.users.id = :bookId
+         AND bookTransactionHistory.book.id = :bookId
+         AND bookTransactionHistory.returnApproved = false
+""")
+    boolean isAlreadyBorrowedByUser(Integer bookId, Integer id);
 }
