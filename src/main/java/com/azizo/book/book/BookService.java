@@ -2,6 +2,7 @@ package com.azizo.book.book;
 
 
 import com.azizo.book.common.PageResponse;
+import com.azizo.book.exception.OperationNotPermittedException;
 import com.azizo.book.history.BookTransactionHistory;
 import com.azizo.book.history.BookTransactionHistoryRepository;
 import com.azizo.book.user.Users;
@@ -15,7 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -107,5 +108,38 @@ public class BookService {
                 allBorrowedBooks.getTotalPages(),
                 allBorrowedBooks.isFirst(),
                 allBorrowedBooks.isLast());
+    }
+
+    public Integer updateShareableStatus(Integer bookId, Authentication connectedUser) {
+
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("No book found with the ID::" + bookId));
+                 Users user = ((Users) connectedUser.getPrincipal());
+                 if(!Objects.equals(book.getOwner().getId(), user.getId())){
+
+                     throw new OperationNotPermittedException("You cannot update other books shareable status");
+
+                 }
+                 book.setShareable(!book.isShareable());
+                 bookRepository.save(book);
+                 return bookId;
+
+
+    }
+
+    public Integer updateArchivedStatus(Integer bookId, Authentication connectedUser) {
+
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("No book found with the ID::" + bookId));
+        Users user = ((Users) connectedUser.getPrincipal());
+        if(!Objects.equals(book.getOwner().getId(), user.getId())){
+            throw new OperationNotPermittedException("You cannot update books archived status");
+
+        }
+        book.setArchived(!book.isArchived());
+        bookRepository.save(book);
+        return bookId;
+
+
     }
 }
