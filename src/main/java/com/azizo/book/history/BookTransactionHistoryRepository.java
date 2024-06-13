@@ -1,6 +1,7 @@
 package com.azizo.book.history;
 
 import com.azizo.book.book.Book;
+import com.azizo.book.book.BookController;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,4 +49,17 @@ Page<BookTransactionHistory> findAllBorrowedBooks(Pageable pageable, Integer use
       
 """)
     Optional<BookTransactionHistory> findByBookIdAndUserId(Integer bookId, Integer id);
+
+
+    @Query("""
+      SELECT transaction
+      FROM BookTransactionHistory transaction
+      WHERE transaction.book.owner.id = :userId
+      AND transaction.book.id = :bookId
+      AND transaction.returned = true
+      AND transaction.returnApproved = false
+    
+
+""")
+    Optional<BookTransactionHistory> findByBookIdAndOwnerId(Integer bookId, Integer id);
 }

@@ -1,6 +1,7 @@
 package com.azizo.book.book;
 
 
+import com.azizo.book.file.FileStorageService;
 import com.azizo.book.common.PageResponse;
 import com.azizo.book.exception.OperationNotPermittedException;
 import com.azizo.book.history.BookTransactionHistory;
@@ -12,11 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +27,8 @@ public class BookService {
     private final BookTransactionHistoryRepository bookTransactionHistoryRepository;
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final FileStorageService fileStorageService;
+
 
     public Integer save(BookRequest request, Authentication connectedUser) {
         Users user = ((Users) connectedUser.getPrincipal());
@@ -192,5 +193,34 @@ BookTransactionHistory bookTransactionHistory = bookTransactionHistoryRepository
         .orElseThrow(()-> new OperationNotPermittedException("You did not borrow this book"));
         bookTransactionHistory.setReturned(true);
         return bookTransactionHistoryRepository.save(bookTransactionHistory).getId();
+    }
+
+    public Integer approveReturnBorrowedBook(Integer bookId, Authentication connectedUser) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("No book found with the ID::" + bookId));
+        if (book.isArchived() || !book.isShareable()) {
+            throw new OperationNotPermittedException("the requested book connot be borrowed since it is archived or not shareable");
+
+        }
+        Users user = ((Users) connectedUser.getPrincipal());
+        if (!Objects.equals(book.getOwner().getId(), user.getId())) {
+            throw new OperationNotPermittedException("You cannot borrow or return your own book");
+        }
+            BookTransactionHistory bookTransactionHistory = bookTransactionHistoryRepository.findByBookIdAndOwnerId(bookId, user.getId())
+                    .orElseThrow(()-> new OperationNotPermittedException("The book is not returned yet. You cannot approve its return"));
+            bookTransactionHistory.setReturnApproved(true);
+            return bookTransactionHistoryRepository.save(bookTransactionHistory).getId();
+
+        }
+
+
+    public void uploadBookCoverPicture(MultipartFile file, Authentication connectedUser, Integer bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("No book found with the ID::" + bookId));
+        Users user = ((Users) connectedUser.getPrincipal());
+        var bookCover = fileStorageService.saveFile(file, user.getId());
+        book.setBookCover(bookCover);
+        bookRepository.save(book);
+
     }
 }
