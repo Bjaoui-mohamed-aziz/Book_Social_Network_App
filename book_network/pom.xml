@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.azizo</groupId>
-	<artifactId>book_network</artifactId>
+	<artifactId>book-network-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Book_Network_API</name>
 	<description>SpringBoot project for our social book network</description>

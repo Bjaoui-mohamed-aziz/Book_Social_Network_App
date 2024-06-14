@@ -32,11 +32,11 @@ Page<BookTransactionHistory> findAllBorrowedBooks(Pageable pageable, Integer use
     @Query("""
          SELECT (COUNT(*) > 0) AS isBorrowed
          FROM BookTransactionHistory bookTransactionHistory
-         WHERE bookTransactionHistory.users.id = :bookId
+         WHERE bookTransactionHistory.users.id = :userId
          AND bookTransactionHistory.book.id = :bookId
          AND bookTransactionHistory.returnApproved = false
 """)
-    boolean isAlreadyBorrowedByUser(Integer bookId, Integer id);
+    boolean isAlreadyBorrowedByUser(Integer bookId, Integer userId);
 
 
     @Query("""
@@ -48,7 +48,7 @@ Page<BookTransactionHistory> findAllBorrowedBooks(Pageable pageable, Integer use
       AND transaction.returnApproved = false
       
 """)
-    Optional<BookTransactionHistory> findByBookIdAndUserId(Integer bookId, Integer id);
+    Optional<BookTransactionHistory> findByBookIdAndUserId(Integer bookId, Integer userId);
 
 
     @Query("""
@@ -61,5 +61,5 @@ Page<BookTransactionHistory> findAllBorrowedBooks(Pageable pageable, Integer use
     
 
 """)
-    Optional<BookTransactionHistory> findByBookIdAndOwnerId(Integer bookId, Integer id);
+    Optional<BookTransactionHistory> findByBookIdAndOwnerId(Integer bookId, Integer userId);
 }
