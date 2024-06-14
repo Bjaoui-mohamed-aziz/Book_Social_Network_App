@@ -24,7 +24,7 @@ public class FeedbackController {
             @Valid @RequestBody FeedbackRequest request,
             Authentication connectedUser
     ){
-        return ok(service.save(request, connectedUser))
+        return ok(service.save(request, connectedUser));
     }
 
     @GetMapping("/book/{book-id}")
